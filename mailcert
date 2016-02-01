@@ -1,0 +1,104 @@
+#!/bin/bash
+#########################################################################
+# Plesk LetsEncrypt Certificate - copy to                               #
+# Postfix - Dovecot - Courier - Webmin                                  #
+# Powie . www.powie.de V1.01                                            #
+# For Plesk / Debian                                                    #
+######################################################################### 
+# first we define our common hostname as uses by our plesk host and cert!
+HOSTNAME="artus.be-webspace.net"
+# that's all for now
+# nothing below need to be changed
+#
+#
+#
+#
+#
+#
+#
+# here we start
+# This is our http conf we are looking into it
+CONFFILE=/var/www/vhosts/system/${HOSTNAME}/conf/httpd_ip_default.conf
+
+#we need some functions
+#get the pem file from apache conf, because its written there after changes
+getpemfile() {
+    echo "suche"
+    CERT=$(grep -m 1 SSLCertificateFile ${CONFFILE})
+    CERTFILE=${CERT:20}
+    echo ${CERTFILE}
+}
+
+#copy pem to dovecot
+certfordovecot () {
+    if [ -e /etc/dovecot/private/ssl-cert-and-key.pem ]
+    then
+        cp ${CERTFILE} /etc/dovecot/private/ssl-cert-and-key.pem
+        service dovecot restart
+    fi
+}
+#copy pem to postfix
+certforpostfix () {
+    if [ -e /etc/postfix/postfix_default.pem ]
+    then
+        cp ${CERTFILE} /etc/postfix/postfix_default.pem.
+        service postfix restart
+    fi
+}
+#copy pem to courier
+certforcourier () {
+    if [ -e /usr/share/imapd.pem ]
+    then
+        cp ${CERTFILE} /usr/share/imapd.pem
+        service xinetd restart
+    fi
+    if [ -e /usr/share/pop3d.pem ]
+    then
+        cp ${CERTFILE} /usr/share/pop3d.pem
+        service xinetd restart
+    fi
+}
+#copy pem to webmin
+certforwebmin () {
+    if [ -e /etc/webmin/miniserv.pem ]
+    then
+        cp ${CERTFILE} /etc/webmin/miniserv.pem
+        service webmin restart
+    fi
+}
+
+#copy the cert file to the services
+copycerts() {
+    certfordovecot
+    certforpostfix
+    certforcourier
+    certforwebmin
+}
+
+#now we start
+if [ -e ${CONFFILE} ]
+then
+    getpemfile
+    if [ -e ${CERTFILE} ]
+    then
+        copycerts
+        exit 0
+    else
+        echo "cert file doesnt exists"
+        exit 1
+    fi
+else
+    echo "conf file not found"
+    exit 1
+fi
+
+
+### from evaluation:
+#cp /opt/psa/var/modules/letsencrypt/etc/live/artus.be-webspace.net/fullchain.pem /etc/dovecot/private/ssl-cert-and-key.pem
+#cp /opt/psa/var/modules/letsencrypt/etc/live/artus.be-webspace.net/fullchain.pem /etc/postfix/postfix_default.pem 
+#cp /opt/psa/var/modules/letsencrypt/etc/live/${HOSTNAME}/fullchain.pem /usr/share/imapd.pem
+#cp /opt/psa/var/modules/letsencrypt/etc/live/${HOSTNAME}/fullchain.pem /usr/share/pop3d.pem
+#cp /opt/psa/var/modules/letsencrypt/etc/live/${HOSTNAME}/fullchain.pem /etc/webmin/miniserv.pem
+#service postfix restart
+#service xinetd restart
+#service webmin restart
