@@ -91,14 +91,3 @@ else
     echo "conf file not found"
     exit 1
 fi
-
-
-### from evaluation:
-#cp /opt/psa/var/modules/letsencrypt/etc/live/artus.be-webspace.net/fullchain.pem /etc/dovecot/private/ssl-cert-and-key.pem
-#cp /opt/psa/var/modules/letsencrypt/etc/live/artus.be-webspace.net/fullchain.pem /etc/postfix/postfix_default.pem 
-#cp /opt/psa/var/modules/letsencrypt/etc/live/${HOSTNAME}/fullchain.pem /usr/share/imapd.pem
-#cp /opt/psa/var/modules/letsencrypt/etc/live/${HOSTNAME}/fullchain.pem /usr/share/pop3d.pem
-#cp /opt/psa/var/modules/letsencrypt/etc/live/${HOSTNAME}/fullchain.pem /etc/webmin/miniserv.pem
-#service postfix restart
-#service xinetd restart
-#service webmin restart
