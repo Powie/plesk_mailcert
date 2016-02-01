@@ -15,7 +15,6 @@ HOSTNAME="artus.be-webspace.net"
 #
 #
 #
-#
 # here we start
 # This is our http conf we are looking into it
 CONFFILE=/var/www/vhosts/system/${HOSTNAME}/conf/httpd_ip_default.conf
@@ -23,7 +22,7 @@ CONFFILE=/var/www/vhosts/system/${HOSTNAME}/conf/httpd_ip_default.conf
 #we need some functions
 #get the pem file from apache conf, because its written there after changes
 getpemfile() {
-    echo "suche"
+    #echo "suche"
     CERT=$(grep -m 1 SSLCertificateFile ${CONFFILE})
     CERTFILE=${CERT:20}
     echo ${CERTFILE}
