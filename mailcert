@@ -2,7 +2,8 @@
 #########################################################################
 # Plesk LetsEncrypt Certificate - copy to                               #
 # Postfix - Dovecot - Courier - Webmin                                  #
-# Powie . www.powie.de V1.01                                            #
+# Powie . www.powie.de                                                  #
+# V1.02                                                                 #
 # For Plesk / Debian                                                    #
 ######################################################################### 
 # first we define our common hostname as uses by our plesk host and cert!
@@ -17,7 +18,7 @@ HOSTNAME="artus.be-webspace.net"
 #
 # here we start
 # This is our http conf we are looking into it
-CONFFILE=/var/www/vhosts/system/${HOSTNAME}/conf/httpd_ip_default.conf
+CONFFILE=/var/www/vhosts/system/${HOSTNAME}/conf/httpd.conf
 
 #we need some functions
 #get the pem file from apache conf, because its written there after changes
