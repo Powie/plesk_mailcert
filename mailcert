@@ -3,16 +3,19 @@
 # Plesk LetsEncrypt Certificate - copy to                               #
 # Postfix - Dovecot - Courier - Webmin                                  #
 # Powie . www.powie.de                                                  #
-# V1.02                                                                 #
+# V1.03                                                                 #
 # For Plesk / Debian                                                    #
 ######################################################################### 
 # first we define our common hostname as uses by our plesk host and cert!
-HOSTNAME="artus.be-webspace.net"
+HOSTNAME=$(hostname)
+echo -e "Server name set to: \e[4m$HOSTNAME"
+echo -e "\e[0mIf this is incorrect please set custom hostname in script."
+#
+# Set hostname here if custom. Example: HOSTNAME=server1.boisehosting.net
+#HOSTNAME="artus.be-webspace.net"
+#
 # that's all for now
 # nothing below need to be changed
-#
-#
-#
 #
 #
 #
@@ -26,44 +29,74 @@ getpemfile() {
     #echo "suche"
     CERT=$(grep -m 1 SSLCertificateFile ${CONFFILE})
     CERTFILE=${CERT:20}
-    echo ${CERTFILE}
+    echo "Plesk certificate located at:${CERTFILE}"
 }
 
 #copy pem to dovecot
 certfordovecot () {
     if [ -e /etc/dovecot/private/ssl-cert-and-key.pem ]
     then
-        cp ${CERTFILE} /etc/dovecot/private/ssl-cert-and-key.pem
-        service dovecot restart
+        if diff  /etc/dovecot/private/ssl-cert-and-key.pem $CERTFILE > /dev/null
+            then
+                echo -e "\e[33mSkipped: \e[39mDovecot already up to date."
+            else
+                cp ${CERTFILE} /etc/dovecot/private/ssl-cert-and-key.pem
+                echo -e "\e[32mSUCCESS: \e[39mDovecot Certificate Updated"
+                service dovecot restart
+            fi
     fi
 }
 #copy pem to postfix
 certforpostfix () {
     if [ -e /etc/postfix/postfix_default.pem ]
     then
-        cp ${CERTFILE} /etc/postfix/postfix_default.pem.
-        service postfix restart
+        if diff  /etc/postfix/postfix_default.pem $CERTFILE > /dev/null
+            then
+                echo -e "\e[33mSkipped: \e[39mPostfix already up to date."
+            else
+                cp ${CERTFILE} /etc/postfix/postfix_default.pem
+                echo -e "\e[32mSUCCESS: \e[39mPostfix Certificate Updated"
+                service postfix restart
+            fi
     fi
 }
 #copy pem to courier
 certforcourier () {
     if [ -e /usr/share/imapd.pem ]
     then
-        cp ${CERTFILE} /usr/share/imapd.pem
-        service xinetd restart
+        if diff  /usr/share/imapd.pem $CERTFILE > /dev/null
+            then
+                echo -e "\e[33mSkipped: \e[39mCourier-IMAP already up to date."
+            else
+                cp ${CERTFILE} /usr/share/imapd.pem
+                echo -e "\e[32mSUCCESS: \e[39mCourier-IMAP Certificate Updated"
+                service xinetd restart
+            fi
     fi
     if [ -e /usr/share/pop3d.pem ]
     then
-        cp ${CERTFILE} /usr/share/pop3d.pem
-        service xinetd restart
+        if diff  /usr/share/pop3d.pem $CERTFILE > /dev/null
+            then
+                echo -e "\e[33mSkipped: \e[39mCourier-POP3 already up to date."
+            else
+                cp ${CERTFILE} /usr/share/pop3d.pem
+                echo -e "\e[32mSUCCESS: \e[39mCourier-POP3 Certificate Updated"
+                service xinetd restart
+            fi
     fi
 }
 #copy pem to webmin
 certforwebmin () {
     if [ -e /etc/webmin/miniserv.pem ]
     then
-        cp ${CERTFILE} /etc/webmin/miniserv.pem
-        service webmin restart
+        if diff  /etc/webmin/miniserv.pem $CERTFILE > /dev/null
+            then
+                echo -e "\e[33mSkipped: \e[39mWebmin already up to date."
+            else
+                cp ${CERTFILE} /etc/webmin/miniserv.pem
+                echo -e "\e[32mSUCCESS: \e[39mWebmin Certificate Updated"
+                service webmin restart
+            fi
     fi
 }
 
