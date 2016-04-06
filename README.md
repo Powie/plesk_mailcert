@@ -1,5 +1,6 @@
 # plesk_mailcert
 Copys Plesk LetsEncrypt CERT to Mailservers and Webmin
+Script Version: 1.05
 
 The script MAILCERT is used if you secured your plesk server also with an LetsEncrypt certificate, Example: server.mydomain.tld
 
@@ -13,6 +14,7 @@ Supported:
 - Dovecot
 - Courier
 - Webmin
+- QMail
 
 Usage:
 - Install the LetsEncrypt Plesk Extension: https://github.com/plesk/letsencrypt-plesk
@@ -28,3 +30,6 @@ At this time:
 - Courier IMAP: /usr/share/imapd.pem
 - Courier POP3: /usr/share/pop3d.pem
 - Webmin: /etc/webmin/miniserv.pem
+- QMail: /var/qmail/control/servercert.pem
+
+If you have any questions or will get support please contact us at https://forum.powie.de

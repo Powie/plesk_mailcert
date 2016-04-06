@@ -1,9 +1,9 @@
 #!/bin/bash
 #########################################################################
 # Plesk LetsEncrypt Certificate - copy to                               #
-# Postfix - Dovecot - Courier - Webmin                                  #
+# Postfix - Dovecot - Courier - Webmin - QMail                          #
 # Powie . www.powie.de                                                  #
-# V1.04                                                                 #
+# V1.05                                                                 #
 # For Plesk / Debian                                                    #
 ######################################################################### 
 # first we define our common hostname as uses by our plesk host and cert!
@@ -104,6 +104,20 @@ certforwebmin () {
             fi
     fi
 }
+#copy pem to qmail
+certforqmail () {
+    if [ -e /var/qmail/control/servercert.pem ]
+    then
+        if diff /var/qmail/control/servercert.pem $CERTFILE > /dev/null
+        then
+            echo -e "\e[33mSkipped: \e[39mQMail already up to date."
+        else
+            cp ${CERTFILE} /var/qmail/control/servercert.pem
+            echo -e "\e[32mSUCCESS: \e[39mQMail Certificate Updated"
+            service qmail restart
+        fi
+    fi
+}
 
 #copy the cert file to the services
 copycerts() {
@@ -111,6 +125,7 @@ copycerts() {
     certforpostfix
     certforcourier
     certforwebmin
+    certforqmail
 }
 
 #now we start
