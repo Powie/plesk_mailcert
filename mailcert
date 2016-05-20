@@ -5,11 +5,12 @@
 # Powie . www.powie.de                                                  #
 # V1.05                                                                 #
 # For Plesk / Debian                                                    #
-######################################################################### 
+#########################################################################
 # first we define our common hostname as uses by our plesk host and cert!
-HOSTNAME=$(hostname)
+HOSTNAME="$1"
+if [ -z "$HOSTNAME" ]; then HOSTNAME=$(hostname); fi
 echo -e "Server name set to: \e[4m$HOSTNAME"
-echo -e "\e[0mIf this is incorrect please set custom hostname in script."
+echo -e "\e[0mIf this is incorrect please set custom hostname in script or provide as command line arg."
 #
 # Set hostname here if custom. Example: HOSTNAME=server1.boisehosting.net
 #HOSTNAME="artus.be-webspace.net"
